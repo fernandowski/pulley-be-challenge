@@ -1,0 +1,5 @@
+/.idea/
+/node_modules/
+
+/captrivia-fe-arm64.tar
+/captrivia-fe-amd64.tar

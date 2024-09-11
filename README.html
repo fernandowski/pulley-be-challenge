@@ -1,0 +1,211 @@
+
+		<!DOCTYPE html>
+		<html lang="en">
+		<head>
+			<meta charset="UTF-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+			<title>Instructions</title>
+		</head>
+		<body class="bg-gray-100">
+			<div class="container mx-auto px-4 py-8">
+				<h1 class="text-4xl font-bold mb-4">Instructions</h1>
+				<div class="bg-white shadow-md rounded-lg p-6 mb-8">
+					<h2 class="text-2xl font-bold mb-4 mt-4">Overview</h2>
+
+					<p class="mb-2">
+						The goal of this exercise is to implement a backend for a trivia game about cap tables.  You have been given a frontend to build against, and you must implement a backend to serve its data.
+					</p>
+
+					<p class="mb-2">At a minimum the game must:</p>
+						<ul class="list-disc list-inside mb-4">
+							<li>Allow players to connect to the world server</li>
+							<li>Allow players to create a game</li>
+							<li>Allow players to join a game</li>
+							<li>Have players compete to answer the questions correctly first, all players should see the same screen/questions at the same time</li>
+							<li>Display player scores at the end</li>
+						</ul>
+					</p>
+					<p class="mb-2">
+						The image we have given you supports much richer functionality than just that, but you can implement as much or as
+						little past the base requirements as you'd like.
+					</p>
+
+
+					<h2 class="text-2xl font-bold mb-4 mt-4">Technical Instructions</h2>
+
+					<p class="mb-2">
+						You have been given a Docker image of the frontend service as well as a docker-compose.yml to run it.
+						To start it up, run the following command from this directory:
+					</p>
+
+					<p class="mb-2">
+						For arm64 (M1-M3 macs):
+					</p>
+					<pre class="my-7">docker load &lt; captrivia-fe-arm64.tar && docker-compose up fe</pre>
+					<p class="mb-2">
+						For amd64 (linux/windows intel/amd machines):
+					</p>
+					<pre class="my-7">docker load &lt; captrivia-fe-amd64.tar && docker-compose up fe</pre>
+
+					<p class="mb-2">
+						You may use whatever language or framework you like to build your solution.
+						We have provided some starter options at <a href="https://github.com/ProlificLabs/captrivia-starter" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">https://github.com/ProlificLabs/captrivia-starter</a>, though you are not obligated to use them.
+					</p>
+
+					<h2 class="text-2xl font-bold mb-4 mt-4">Submission</h2>
+					<p class="mb-2">
+						Once you have your solution working, you should put together a <tt>.tar.gz</tt> or <tt>.zip</tt> with your work and then upload it to the Greenhouse link provided in the email with this assignment.
+					</p>
+
+					<p class="mb-2">
+					Include the following in your submission:
+						<ul class="list-disc list-inside mb-4">
+						<li>The code</li>
+						<li><tt>docker-compose.yml</tt>: Updated to start up your backend</li>
+						<li><tt>DECISIONS.md</tt>: Walk us through the big decisions you made in this project, both technical and approach-wise</li>
+						<li><tt>INSTRUCTIONS.md</tt>: Only if you think we'll have trouble running the solution with <tt>docker compose up</tt></li>
+						</ul>
+					</p>
+
+					<p class="mb-2">
+						Below is a list of the types and messages that are used in the API. You can use this as a
+						reference to implement your solution.
+					</p>
+				</div>
+				<div class="mb-8">
+					<h2 class="text-2xl font-bold mb-4">Table of Contents</h2>
+					<a href="#api-endpoints" class="text-blue-500 hover:underline">API Endpoints</a><br><a href="#player_commands" class="text-blue-500 hover:underline">player_commands</a><br><a href="#PlayerCommandType" class="text-blue-500 hover:underline ml-4">PlayerCommandType</a><br><a href="#PlayerCommand" class="text-blue-500 hover:underline ml-4">PlayerCommand</a><br><a href="#PlayerCommandCreate" class="text-blue-500 hover:underline ml-4">PlayerCommandCreate</a><br><a href="#PlayerCommandJoin" class="text-blue-500 hover:underline ml-4">PlayerCommandJoin</a><br><a href="#PlayerCommandReady" class="text-blue-500 hover:underline ml-4">PlayerCommandReady</a><br><a href="#PlayerCommandStart" class="text-blue-500 hover:underline ml-4">PlayerCommandStart</a><br><a href="#PlayerCommandAnswer" class="text-blue-500 hover:underline ml-4">PlayerCommandAnswer</a><br><a href="#player_events" class="text-blue-500 hover:underline">player_events</a><br><a href="#PlayerEventType" class="text-blue-500 hover:underline ml-4">PlayerEventType</a><br><a href="#PlayerEvent" class="text-blue-500 hover:underline ml-4">PlayerEvent</a><br><a href="#PlayerEventConnect" class="text-blue-500 hover:underline ml-4">PlayerEventConnect</a><br><a href="#PlayerEventDisconnect" class="text-blue-500 hover:underline ml-4">PlayerEventDisconnect</a><br><a href="#game_events" class="text-blue-500 hover:underline">game_events</a><br><a href="#GameEventType" class="text-blue-500 hover:underline ml-4">GameEventType</a><br><a href="#GameEvent" class="text-blue-500 hover:underline ml-4">GameEvent</a><br><a href="#GameEventCreate" class="text-blue-500 hover:underline ml-4">GameEventCreate</a><br><a href="#GameEventStateChange" class="text-blue-500 hover:underline ml-4">GameEventStateChange</a><br><a href="#GameEventPlayerCount" class="text-blue-500 hover:underline ml-4">GameEventPlayerCount</a><br><a href="#GameEventDestroy" class="text-blue-500 hover:underline ml-4">GameEventDestroy</a><br><a href="#PlayerScore" class="text-blue-500 hover:underline ml-4">PlayerScore</a><br><a href="#GameEventEnd" class="text-blue-500 hover:underline ml-4">GameEventEnd</a><br><a href="#GameEventStart" class="text-blue-500 hover:underline ml-4">GameEventStart</a><br><a href="#GameEventCountdown" class="text-blue-500 hover:underline ml-4">GameEventCountdown</a><br><a href="#GameEventQuestion" class="text-blue-500 hover:underline ml-4">GameEventQuestion</a><br><a href="#GameEventPlayerEnter" class="text-blue-500 hover:underline ml-4">GameEventPlayerEnter</a><br><a href="#GameEventPlayerJoin" class="text-blue-500 hover:underline ml-4">GameEventPlayerJoin</a><br><a href="#GameEventPlayerReady" class="text-blue-500 hover:underline ml-4">GameEventPlayerReady</a><br><a href="#GameEventPlayerLeave" class="text-blue-500 hover:underline ml-4">GameEventPlayerLeave</a><br><a href="#GameEventPlayerCorrect" class="text-blue-500 hover:underline ml-4">GameEventPlayerCorrect</a><br><a href="#GameEventPlayerIncorrect" class="text-blue-500 hover:underline ml-4">GameEventPlayerIncorrect</a><br>
+				</div>
+				<div class="bg-white shadow-md rounded-lg p-6 mb-8">
+	<h3 class="text-xl font-bold mb-2" id="api-endpoints">API Endpoints</h3>
+	<table class="table-auto border-collapse w-full">
+	<thead>
+	<tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+	<th class="py-3 px-6 text-left">HTTP Method</th>
+	<th class="py-3 px-6 text-left">URL Path</th>
+	<th class="py-3 px-6 text-left">Description</th>
+	</tr>
+	</thead>
+	<tbody class="text-gray-600 text-sm font-light">
+	<tr class="border-b border-gray-200 hover:bg-gray-100">
+			<td class="py-3 px-6 text-left whitespace-nowrap">GET</td>
+			<td class="py-3 px-6 text-left whitespace-nowrap">/connect</td>
+			<td class="py-3 px-6 text-left"> Connect to game's websocket, ensure you pass a ?name=YourName or it will reject you, websocket will error out when duplicate name given</td>
+			</tr>
+			<tr class="border-b border-gray-200 hover:bg-gray-100">
+			<td class="py-3 px-6 text-left whitespace-nowrap">GET</td>
+			<td class="py-3 px-6 text-left whitespace-nowrap">/games</td>
+			<td class="py-3 px-6 text-left"> List available games [{"id": "uuid", "name": "string", "player_count":5, "question_count":6, "state": "waiting" }] (state: waiting | countdown | question | ended)</td>
+			</tr>
+			</tbody>
+	</table>
+	</div><div class="bg-white shadow-md rounded-lg p-6 mb-8"><h2 class="text-2xl font-bold mb-4" id="player_commands">player_commands</h2><div class="mb-4"><h3 class="text-xl font-bold mb-2" id="PlayerCommandType">PlayerCommandType</h3><p class="text-gray-700 mb-2">PlayerCommandType is a string type that creates the discriminated union of
+player commands.
+</p></div><p class="text-gray-700 mb-2">Player commands that can be given to the server by a player.
+</p><ul class="list-disc list-inside mb-4"><li><code>PlayerCommandTypeCreate: "create"</code></li><li><code>PlayerCommandTypeJoin: "join"</code></li><li><code>PlayerCommandTypeReady: "ready"</code></li><li><code>PlayerCommandTypeStart: "start"</code></li><li><code>PlayerCommandTypeAnswer: "answer"</code></li></ul><div class="mb-4"><h3 class="text-xl font-bold mb-2" id="PlayerCommand">PlayerCommand</h3><p class="text-gray-700 mb-2">PlayerCommand message structure
+</p><pre class="bg-gray-200 p-4 rounded"><code>{
+  "nonce": "string",
+  "payload": "json.RawMessage",
+  "type": "PlayerCommandType"
+}</code></tt></div><div class="mb-4"><h3 class="text-xl font-bold mb-2" id="PlayerCommandCreate">PlayerCommandCreate</h3><p class="text-gray-700 mb-2">PlayerCommandCreate creates a game
+</p><pre class="bg-gray-200 p-4 rounded"><code>{
+  "name": "string",
+  "question_count": "int"
+}</code></tt></div><div class="mb-4"><h3 class="text-xl font-bold mb-2" id="PlayerCommandJoin">PlayerCommandJoin</h3><p class="text-gray-700 mb-2">PlayerCommandJoin joins a game
+</p><pre class="bg-gray-200 p-4 rounded"><code>{
+  "game_id": "uuid.UUID"
+}</code></tt></div><div class="mb-4"><h3 class="text-xl font-bold mb-2" id="PlayerCommandReady">PlayerCommandReady</h3><p class="text-gray-700 mb-2">PlayerCommandReady marks a player as ready
+</p><pre class="bg-gray-200 p-4 rounded"><code>{
+  "game_id": "uuid.UUID"
+}</code></tt></div><div class="mb-4"><h3 class="text-xl font-bold mb-2" id="PlayerCommandStart">PlayerCommandStart</h3><p class="text-gray-700 mb-2">PlayerCommandStart starts a game, only available to first player
+</p><pre class="bg-gray-200 p-4 rounded"><code>{
+  "game_id": "uuid.UUID"
+}</code></tt></div><div class="mb-4"><h3 class="text-xl font-bold mb-2" id="PlayerCommandAnswer">PlayerCommandAnswer</h3><p class="text-gray-700 mb-2">PlayerCommandAnswer answers a question with an answer
+</p><pre class="bg-gray-200 p-4 rounded"><code>{
+  "game_id": "uuid.UUID",
+  "index": "int",
+  "question_id": "uuid.UUID"
+}</code></tt></div></div><div class="bg-white shadow-md rounded-lg p-6 mb-8"><h2 class="text-2xl font-bold mb-4" id="player_events">player_events</h2><div class="mb-4"><h3 class="text-xl font-bold mb-2" id="PlayerEventType">PlayerEventType</h3><p class="text-gray-700 mb-2">PlayerEventType is the discriminating union string that differentiates
+events.
+</p></div><p class="text-gray-700 mb-2">Player events transcend the scope of games and can happen anywhere at any
+time.
+</p><ul class="list-disc list-inside mb-4"><li><code>PlayerEventTypeConnect: "player_connect"</code></li><li><code>PlayerEventTypeDisconnect: "player_disconnect"</code></li></ul><div class="mb-4"><h3 class="text-xl font-bold mb-2" id="PlayerEvent">PlayerEvent</h3><p class="text-gray-700 mb-2">PlayerEvent is a message that is sent to all players in the system about
+other players.
+</p><pre class="bg-gray-200 p-4 rounded"><code>{
+  "payload": "*json.RawMessage",
+  "player": "string",
+  "type": "PlayerEventType"
+}</code></tt></div><div class="mb-4"><h3 class="text-xl font-bold mb-2" id="PlayerEventConnect">PlayerEventConnect</h3><p class="text-gray-700 mb-2">PlayerEventConnect is sent to all players when a player connects
+</p><pre class="bg-gray-200 p-4 rounded"><code>{}</code></tt></div><div class="mb-4"><h3 class="text-xl font-bold mb-2" id="PlayerEventDisconnect">PlayerEventDisconnect</h3><p class="text-gray-700 mb-2">PlayerEventDisconnect is sent to all players when a player disconnects
+</p><pre class="bg-gray-200 p-4 rounded"><code>{}</code></tt></div></div><div class="bg-white shadow-md rounded-lg p-6 mb-8"><h2 class="text-2xl font-bold mb-4" id="game_events">game_events</h2><div class="mb-4"><h3 class="text-xl font-bold mb-2" id="GameEventType">GameEventType</h3><p class="text-gray-700 mb-2">GameEventType is a string type that creates the discriminated union of
+event types.
+</p></div><p class="text-gray-700 mb-2">The following events are used by to broadcast changes
+to players not in games about games that are occurring.
+</p><ul class="list-disc list-inside mb-4"><li><code>GameEventTypeCreate: "game_create"</code></li><li><code>GameEventTypeStateChange: "game_state_change"</code></li><li><code>GameEventTypePlayerCount: "game_player_count"</code></li><li><code>GameEventTypeDestroy: "game_destroy"</code></li></ul><p class="text-gray-700 mb-2">The following events are used by the game to broadcast changes to active
+game participants about the state of the game.
+</p><ul class="list-disc list-inside mb-4"><li><code>GameEventTypeStart: "game_start"</code></li><li><code>GameEventTypeEnd: "game_end"</code></li><li><code>GameEventTypeCountdown: "game_countdown"</code></li><li><code>GameEventTypeQuestion: "game_question"</code></li><li><code>GameEventTypePlayerEnter: "game_player_enter"</code></li><li><code>GameEventTypePlayerJoin: "game_player_join"</code></li><li><code>GameEventTypePlayerReady: "game_player_ready"</code></li><li><code>GameEventTypePlayerLeave: "game_player_leave"</code></li><li><code>GameEventTypePlayerCorrect: "game_player_correct"</code></li><li><code>GameEventTypePlayerIncorrect: "game_player_incorrect"</code></li></ul><div class="mb-4"><h3 class="text-xl font-bold mb-2" id="GameEvent">GameEvent</h3><p class="text-gray-700 mb-2">GameEvent is sent to players to inform them of changes to a game.
+</p><pre class="bg-gray-200 p-4 rounded"><code>{
+  "id": "uuid.UUID",
+  "payload": "*json.RawMessage",
+  "type": "GameEventType"
+}</code></tt></div><div class="mb-4"><h3 class="text-xl font-bold mb-2" id="GameEventCreate">GameEventCreate</h3><p class="text-gray-700 mb-2">GameEventCreate is sent to all players when a game is created
+</p><pre class="bg-gray-200 p-4 rounded"><code>{
+  "name": "string",
+  "question_count": "int"
+}</code></tt></div><div class="mb-4"><h3 class="text-xl font-bold mb-2" id="GameEventStateChange">GameEventStateChange</h3><p class="text-gray-700 mb-2">GameEventStateChange is sent to all players when the game state changes
+</p><pre class="bg-gray-200 p-4 rounded"><code>{
+  "state": "string"
+}</code></tt></div><div class="mb-4"><h3 class="text-xl font-bold mb-2" id="GameEventPlayerCount">GameEventPlayerCount</h3><p class="text-gray-700 mb-2">GameEventPlayerCount is sent to all players when the player count changes
+</p><pre class="bg-gray-200 p-4 rounded"><code>{
+  "player_count": "int"
+}</code></tt></div><div class="mb-4"><h3 class="text-xl font-bold mb-2" id="GameEventDestroy">GameEventDestroy</h3><p class="text-gray-700 mb-2">GameEventDestroy is sent to all players when a game is destroyed and no
+longer exists on the server.
+</p><pre class="bg-gray-200 p-4 rounded"><code>{}</code></tt></div><div class="mb-4"><h3 class="text-xl font-bold mb-2" id="PlayerScore">PlayerScore</h3><p class="text-gray-700 mb-2">PlayerScore is a simple struct to hold a player's name and score
+</p><pre class="bg-gray-200 p-4 rounded"><code>{
+  "name": "string",
+  "score": "int"
+}</code></tt></div><div class="mb-4"><h3 class="text-xl font-bold mb-2" id="GameEventEnd">GameEventEnd</h3><p class="text-gray-700 mb-2">GameEventEnd is sent to all players when a game ends and includes
+the tallied scores for all players.
+</p><pre class="bg-gray-200 p-4 rounded"><code>{
+  "scores": "PlayerScore[]"
+}</code></tt></div><div class="mb-4"><h3 class="text-xl font-bold mb-2" id="GameEventStart">GameEventStart</h3><p class="text-gray-700 mb-2">GameEventStart is sent to all players when a game starts
+</p><pre class="bg-gray-200 p-4 rounded"><code>{}</code></tt></div><div class="mb-4"><h3 class="text-xl font-bold mb-2" id="GameEventCountdown">GameEventCountdown</h3><p class="text-gray-700 mb-2">GameEventCountdown is sent to all players when a countdown to a question
+begins.
+</p><pre class="bg-gray-200 p-4 rounded"><code>{
+  "seconds": "int"
+}</code></tt></div><div class="mb-4"><h3 class="text-xl font-bold mb-2" id="GameEventQuestion">GameEventQuestion</h3><p class="text-gray-700 mb-2">GameEventQuestion is sent to all players when a question is asked
+</p><pre class="bg-gray-200 p-4 rounded"><code>{
+  "id": "uuid.UUID",
+  "options": "string[]",
+  "question": "string",
+  "seconds": "int"
+}</code></tt></div><div class="mb-4"><h3 class="text-xl font-bold mb-2" id="GameEventPlayerEnter">GameEventPlayerEnter</h3><p class="text-gray-700 mb-2">GameEventPlayerEnter is only sent to the player who joined the game
+</p><pre class="bg-gray-200 p-4 rounded"><code>{
+  "name": "string",
+  "players": "string[]",
+  "players_ready": "map[string]bool",
+  "question_count": "int"
+}</code></tt></div><div class="mb-4"><h3 class="text-xl font-bold mb-2" id="GameEventPlayerJoin">GameEventPlayerJoin</h3><p class="text-gray-700 mb-2">GameEventPlayerJoin is sent to all players when a player joins the game
+</p><pre class="bg-gray-200 p-4 rounded"><code>{
+  "player": "string"
+}</code></tt></div><div class="mb-4"><h3 class="text-xl font-bold mb-2" id="GameEventPlayerReady">GameEventPlayerReady</h3><p class="text-gray-700 mb-2">GameEventPlayerReady is sent to all players when a player is ready
+</p><pre class="bg-gray-200 p-4 rounded"><code>{
+  "player": "string"
+}</code></tt></div><div class="mb-4"><h3 class="text-xl font-bold mb-2" id="GameEventPlayerLeave">GameEventPlayerLeave</h3><p class="text-gray-700 mb-2">GameEventPlayerLeave is sent to all players when a player leaves the game
+</p><pre class="bg-gray-200 p-4 rounded"><code>{
+  "player": "string"
+}</code></tt></div><div class="mb-4"><h3 class="text-xl font-bold mb-2" id="GameEventPlayerCorrect">GameEventPlayerCorrect</h3><p class="text-gray-700 mb-2">GameEventPlayerCorrect is sent to all players when a player answers correctly
+</p><pre class="bg-gray-200 p-4 rounded"><code>{
+  "id": "uuid.UUID",
+  "player": "string"
+}</code></tt></div><div class="mb-4"><h3 class="text-xl font-bold mb-2" id="GameEventPlayerIncorrect">GameEventPlayerIncorrect</h3><p class="text-gray-700 mb-2">GameEventPlayerIncorrect is sent to all players when a player answers
+incorrectly.
+</p><pre class="bg-gray-200 p-4 rounded"><code>{
+  "id": "uuid.UUID",
+  "player": "string"
+}</code></tt></div></div>
+			</div>
+		</body>
+		</html>
+	
