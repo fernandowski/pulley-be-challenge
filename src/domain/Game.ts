@@ -109,6 +109,10 @@ export class Game {
     }
 
     public processAnswer(username: string, questionAsked: string, attemptedAnswer: string): void {
+        if (!this.canAnswerQuestion(username)) {
+            throw new Error('Player Not in Game');
+        }
+
         this.recordUserAttemptedAnswer(username, questionAsked, attemptedAnswer)
 
         if (this.moveToNextQuestion(questionAsked)) {
@@ -119,6 +123,12 @@ export class Game {
             this.calculateScore();
             this.finish();
         }
+    }
+
+    private canAnswerQuestion(username: string): boolean {
+        return this.players.some((player: Player) => {
+            return player.name === username
+        });
     }
 
     public isRoundCompleted(questionAsked: string): boolean {

@@ -67,4 +67,10 @@ describe('Game Class', () => {
 
         expect(game.state).toBe(GameState.Ended);
     });
+
+    it( 'should throw if player not in game attempts to answer', async () => {
+        expect(() => {
+            game.processAnswer('Fernando', testQuestions[0].id, testQuestions[0].correctIndex.toString())
+        }).toThrow('Player Not in Game')
+    })
 });

@@ -53,6 +53,7 @@ export class WebSocketController {
 
                 if (acknowledgeRequests.has(nonce)) {
                     ws.send(JSON.stringify({ error: `request seen before: ${nonce}` }));
+                    return;
                 }
 
                 if (handler) {
