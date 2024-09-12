@@ -73,4 +73,14 @@ describe('Game Class', () => {
             game.processAnswer('Fernando', testQuestions[0].id, testQuestions[0].correctIndex.toString())
         }).toThrow('Player Not in Game')
     })
+
+    it('should return true if answer is correct', async () => {
+        const isCorrectAnswer = game.checkCorrectAnswer('4', 1);
+        expect(isCorrectAnswer).toBe(true);
+    });
+
+    it('should return false if answer is incorrect', async () => {
+        const isCorrectAnswer = game.checkCorrectAnswer('4', 1);
+        expect(isCorrectAnswer).toBe(true);
+    });
 });
