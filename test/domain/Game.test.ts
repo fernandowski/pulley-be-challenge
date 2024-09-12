@@ -83,4 +83,10 @@ describe('Game Class', () => {
         const isCorrectAnswer = game.checkCorrectAnswer('4', 1);
         expect(isCorrectAnswer).toBe(true);
     });
+
+    it('should throw if question does not exist', () => {
+        expect(() => {
+            game.processAnswer('Alice', '122222', testQuestions[1].correctIndex.toString());
+        }).toThrow('Invalid Question ID');
+    })
 });

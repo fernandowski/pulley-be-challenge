@@ -108,9 +108,19 @@ export class Game {
         }
     }
 
+    private isValidQuestion(questionId: string): boolean {
+        return this.questions.some((question: Question) => {
+            return question.id === questionId;
+        })
+    }
+
     public processAnswer(username: string, questionAsked: string, attemptedAnswer: string): void {
         if (!this.canAnswerQuestion(username)) {
             throw new Error('Player Not in Game');
+        }
+
+        if (!this.isValidQuestion(questionAsked)) {
+            throw new Error('Invalid Question ID');
         }
 
         this.recordUserAttemptedAnswer(username, questionAsked, attemptedAnswer)
@@ -161,8 +171,8 @@ export class Game {
     private calculateScore(): void {
         const scoreMap: Map<string, number> = new Map();
 
-        this.userAnswers.forEach((results) => {
-            results.forEach(result => {
+        this.userAnswers.forEach((results: QuestionResult[]) => {
+            results.forEach((result: QuestionResult) => {
                 const currentScore = scoreMap.get(result.name) || 0;
                 const newScore = currentScore + (result.questionResult ? 1 : 0);
                 scoreMap.set(result.name, newScore);
