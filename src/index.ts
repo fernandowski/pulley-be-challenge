@@ -108,14 +108,6 @@ const useCaseHandlers = {
         await joinGameCommand.execute(payload.game_id, name);
         const game = await fetchAGameQuery.execute(payload.game_id);
 
-        broadcastToAll({
-            id: payload.game_id,
-            payload: {
-                player: name
-            },
-            type: MessageTypes.GamePlayerJoin
-        })
-
         const playerNames = game.players.map((player: Player) => {
             return player.name;
         })
@@ -123,16 +115,7 @@ const useCaseHandlers = {
         const playerStatus: {[key: string]: Boolean} = {};
         game.players.forEach((player: Player) => {
             playerStatus[player.name] = !!player.is_ready;
-        })
-
-
-        broadcastToAll({
-            id: payload.game_id,
-            payload: {
-                player_count: playerNames.length
-            },
-            type: MessageTypes.GamePlayerCount
-        })
+        });
 
         ws.send(JSON.stringify(
             {
@@ -146,6 +129,22 @@ const useCaseHandlers = {
                 type: MessageTypes.GamePlayerEnter
             }
         ));
+
+        broadcastToAll({
+            id: payload.game_id,
+            payload: {
+                player: name
+            },
+            type: MessageTypes.GamePlayerJoin
+        })
+
+        broadcastToAll({
+            id: payload.game_id,
+            payload: {
+                player_count: playerNames.length
+            },
+            type: MessageTypes.GamePlayerCount
+        })
     },
     ready: async (ws: WebSocketWithMeta, payload: any, broadcastToAll: (message: any) => void)=> {
         const name = ws.metadata?.name || '';
@@ -174,7 +173,7 @@ const useCaseHandlers = {
                 id: question.id,
                 options: question.options,
                 question: question.questionText,
-                seconds: 3600
+                seconds: 15
             },
             type: MessageTypes.GameQuestion
         });
