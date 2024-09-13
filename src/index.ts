@@ -173,7 +173,7 @@ const useCaseHandlers = {
                 id: question.id,
                 options: question.options,
                 question: question.questionText,
-                seconds: 15
+                seconds: 120
             },
             type: MessageTypes.GameQuestion
         });
@@ -211,7 +211,7 @@ const useCaseHandlers = {
                     id: question.id,
                     options: question.options,
                     question: question.questionText,
-                    seconds: 3600
+                    seconds: 120
                 },
                 type: MessageTypes.GameQuestion
             });

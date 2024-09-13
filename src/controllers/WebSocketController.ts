@@ -9,6 +9,7 @@ export interface WebSocketWithMeta extends WebSocket {
 }
 
 const acknowledgeRequests: Set<string> = new Set();
+const connections: Map<string, WebSocketWithMeta> = new Map();
 
 export class WebSocketController {
 
@@ -37,6 +38,7 @@ export class WebSocketController {
             this.setupMessageHandler(ws);
             this.setupDisconnectionHandler(ws, name);
 
+            connections.set(name, ws);
         } catch (error) {
             ws.send(JSON.stringify({ error: error.message }));
             ws.close();
