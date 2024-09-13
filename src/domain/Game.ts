@@ -26,6 +26,7 @@ export interface Player {
 export interface QuestionResult {
     name: string;
     questionResult: boolean;
+    timeTaken: number
 }
 
 export interface Question {
@@ -46,6 +47,7 @@ export class Game {
     public currentQuestionIndex: number;
     public userAnswers: Map<string, QuestionResult[]> = new Map();
     public scores: ScoreResult[] = [];
+    public questionStartTimes: Map<string, number> = new Map();
 
     constructor(name: string, questionCount: number, id: GameId, state: GameState, players: Player[], q: Question[], currentQuestionIndex: number) {
         this.name = name;
@@ -77,7 +79,9 @@ export class Game {
             return null;
         }
 
-        return this.questions[this.currentQuestionIndex];
+        const question: Question = this.questions[this.currentQuestionIndex];
+        this.startQuestion(question.id);
+        return question
     }
 
     public checkCorrectAnswer(askedQuestionId: string, attemptedAnswerIndex: number) {
@@ -97,13 +101,21 @@ export class Game {
     }
 
     private recordUserAttemptedAnswer(username: string, questionId: string, attemptedAnswerIndex: string): void {
+        const startTime = this.questionStartTimes.get(questionId);
+        const endTime = Date.now();
+        const timeTaken = startTime ? endTime - startTime : 0;
+
         if (!this.userAnswers.has(questionId)) {
             this.userAnswers.set(questionId, []);
         }
 
         const userAnswers = this.userAnswers.get(questionId);
         if (userAnswers) {
-            userAnswers.push({name: username, questionResult: this.checkCorrectAnswer(questionId, parseInt(attemptedAnswerIndex))});
+            userAnswers.push({
+                name: username,
+                questionResult: this.checkCorrectAnswer(questionId, parseInt(attemptedAnswerIndex)),
+                timeTaken
+            });
             this.userAnswers.set(questionId, userAnswers);
         }
     }
@@ -193,5 +205,9 @@ export class Game {
 
     public start(): void {
         this.state = GameState.Countdown;
+    }
+
+    public startQuestion(questionId: string): void {
+        this.questionStartTimes.set(questionId, Date.now());
     }
 }
