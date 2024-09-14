@@ -18,18 +18,21 @@ import {IsRoundCompleted} from "./usecases/queries/IsRoundCompleted";
 import {FetchAGame} from "./usecases/queries/FetchAGame";
 import {IsCorrectAnswer} from "./usecases/queries/IsCorrectAnswer";
 import {DisconnectUser} from "./usecases/commands/DisconnectUser";
+import {InMemoryLeaderboardRepository} from "./infrastructure/databases/memory/InMemoryLeaderboardRepository";
+import {FetchLeaderboard} from "./usecases/queries/FetchLeaderboard";
 
 const app = express();
 app.use(cors());
 
 const userRepository = new InMemoryUserRepository();
 const gameRepository = new InMemoryGameRepository();
+const leaderboardRepository = new InMemoryLeaderboardRepository();
 
 const addGameCommand = new PlayerCreateGame(gameRepository);
 const joinGameCommand = new JoinGame(gameRepository);
 const changePlayerInGameStatusCommand = new ChangePlayerInGameStatusReady(gameRepository);
 const playerStartGame = new PlayerStartGame(gameRepository);
-const answerQuestionCommand = new AnswerQuestion(gameRepository);
+const answerQuestionCommand = new AnswerQuestion(gameRepository, leaderboardRepository);
 const connectUserCommand = new ConnectUser(userRepository);
 
 const fetchAGameQuery = new FetchAGame(gameRepository);
@@ -38,6 +41,7 @@ const isRoundCompletedQuery = new IsRoundCompleted(gameRepository);
 const fetchAllGamesQuery = new FetchGames(gameRepository);
 const fetchNextQuestionQuery = new FetchGameQuestion(gameRepository);
 const disconnectUserCommand = new DisconnectUser(userRepository);
+const fetchLeaderboard = new FetchLeaderboard(leaderboardRepository);
 
 enum MessageTypes {
     PlayerConnect= 'player_connect',
@@ -69,6 +73,14 @@ app.get('/games', (req, res) => {
                 }
             });
             res.json(response);
+        })
+});
+
+app.get('/leaderboard', (req, res) => {
+    fetchLeaderboard.execute()
+        .then((leaderboard) => {
+
+            res.json(leaderboard);
         })
 });
 
